@@ -2,13 +2,15 @@ require('./bootstrap');
 
 import {createApp} from 'vue'
 
-import Home from './components/Home.vue';
+import Home from './components/Home/index';
 import navbar from './sharedcomponent/navbar.vue';
-import router from './router'
+import footer from './sharedcomponent/footer.vue';
+import router from './router' 
+
 
 
 const app = createApp({});
 
-app.component('home', Home);
 app.component('navbar', navbar);
+app.component('footer', footer);
 app.use(router).mount('#app')
