@@ -1,8 +1,8 @@
 <template>
-  <div style="position: relative ">  
+ <div style="position: relative ">     
 <div class="container" style="width:75%; margin-bottom: 70px;">
     
-        <div class="shadow" v-for="oglas in oglasi_korisnik" :key="oglas.id">  
+        <div class="shadow" v-for="oglas in oglasi_korisnika" :key="oglas.id">  
             <router-link style= "color: black; width: auto; text-decoration: none;" :to="`/stanovi/${oglas.id}`">
                 <div class="row">
                     <div class="col-2" style="width:35%; padding:0">
@@ -13,25 +13,10 @@
 
                     <div class="col-4" style="width:64%; padding:0">
                         <div class="stupac2">
-                            <div class="title row">
-                                <h5 style="width: 50%">
-                                    {{oglas.naslov}}
-                                </h5>
-                                <div class="buttons row" style="width: 50%">
-                                  <router-link style= "color: black; width: auto; text-decoration: none; width: 50%; text-align: center; margin-top: 10px;" :to="`/stanovi/edit/${oglas.id}`">
-                                    <div class="button" style="width: 100%">
-                                        
-                                          <button style="background: #088500; border: 1px solid black; border-radius: 3px; padding: 4px 10px; font-size: 17px;">
-                                            Uredite oglas
-                                          </button>
-                                        
-                                    </div>
-                                  </router-link>
-                                  <div class="button" style="width: 50%; text-align: center; margin-top: 10px;"> 
-                                      <button style="background: #ef0017; border: 1px solid black; border-radius: 3px; padding: 4px 10px; font-size: 17px;" @click.prevent="deleteOglas(oglas.id)" type="submit">Obriši</button>
-                                  </div>
-                                </div>
-                            
+                            <div class="title">
+                            <h5>
+                                {{oglas.naslov}}
+                            </h5>
                             </div>
                             <div class="podnaslov" style="margin-left: 25px">
                             <p>{{oglas.tip}} <span style="text-transform: lowercase;">{{oglas.namjena}}</span> </p>
@@ -68,7 +53,7 @@
             </router-link> 
         </div> 
 </div> 
-<div class="site-footer" style="height: 300px; background-color:#666655">
+    <div class="site-footer" style="height: 300px; background-color:#666655">
       <div class="container">
         <div class="row">
           <div class="col-sm-12 col-md-6">
@@ -112,72 +97,31 @@
 <script>  
 
 import axios from 'axios'; 
-import { getOglas_korisnik } from '../../api/index'; 
+import { getOglas_korisnika } from '../../api/index'; 
 import moment from 'moment'; 
-import Swal from 'sweetalert2';
 
 export default {
-  name: 'MojiOglasi',
+  name: 'stanovi-oglasivaca',
   data() {
     return {
-        oglasi_korisnik:[],
+        oglasi_korisnika:[],
         id: null
         
     };
   },
-  async created() { 
-     if(user.isLogged == false){
-      this.$router.push({name: 'Home'})
-    } 
-    this.id = user.id
-    this.oglasi_korisnik = await getOglas_korisnik(this.id);    
+  async created() {  
+    this.id = this.$route.params.id
 
-    this.oglasi_korisnik.forEach(element => {
- 
+    this.oglasi_korisnika = await getOglas_korisnika(this.id);    
+
+    this.oglasi_korisnika.forEach(element => {
         element.cijena = element.cijena
-        element.povrsina = element.povrsina 
+        element.povrsina = element.povrsina
         element.date = moment(String(element.created_at)).format('DD.MM.YYYY')
         element.image = '/images/' + element.image
-    });
-    console.log(this.oglasi_korisnik)   
-
+    });  
   },
   methods: {
-
-      deleteOglas(id) {
-        Swal.fire({
-            title: 'Jeste li sigurni da želite obrisati ovaj oglas?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Da, obriši!'
-          })
-          .then(res=>{ 
-            if(res.isConfirmed == true){
-               axios.post('/api/stanovi/delete/' + id)
-               .then(response => {
-                
-                Swal.fire('Obrisano!', 'Uspješno ste obrisali ovaj oglas.', 'success')
-                .then(res=>{
-                  this.$router.go();
-                }) 
-              })
-              .catch(error => {
-                
-                Swal.fire('Pogreška!', 'Pojavila se pogreška pri brisanju oglasa', 'warning')
-                .then(res=>{
-                  this.$router.go();
-                }) 
-              });       
-            } 
-          })
-          .catch(err=>{
-            console.log(err)
-          })
-        
-       
-     }
       
   }
 };

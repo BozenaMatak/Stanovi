@@ -34,6 +34,16 @@ const routes = [
         component: () => import("../components/Stanovi/index")
     },
     {
+        path: '/stanovi/oglasi-oglasivaca/:id',
+        name: 'stanovi-oglasivaca',
+        component: () => import("../components/Stanovi_oglasivaca/index")
+    },
+    {
+        path: '/stanovi/edit/:id',
+        name: 'edit-oglas',
+        component: () => import("../components/Edit_oglas/index")
+    },
+    {
         path: '/predajoglas',
         name: 'predajoglas',
         component: () => import("../components/PredajOglas/index")

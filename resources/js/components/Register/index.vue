@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+<div style="position: relative ">  
+  <div class="container" style="margin-bottom: 120px; margin-top: 90px;">
     <div class="shadow">
       <div class="col-12">
         <div class="registracija">
@@ -20,7 +21,7 @@
               <h4>Privatni korisnik</h4>
             </div>
             <div class="opis_korisnika">
-              Privatni korisnik ima mogućnost predaje malih besplatnih oglasa u većini rubrika kao i besplatnu predaju oglasa u tiskanom izdanju Oglasnika.
+              Privatni korisnik ima mogućnost pregledavanja objavljenih oglasa nekretnina kao i pretraživanje istih pomoću filtera radi bržeg i lakšeg pronalaska onoga što traži.
             </div>
             <div class="button_korisnik">
               <router-link style= "color: black; width: auto; text-decoration: none;" :to="'/register/privatni-korisnik'">
@@ -36,7 +37,7 @@
               <h4>Poslovni korisnik</h4>
             </div>
             <div class="opis_korisnika2">
-             S potencijalom od preko 400.000 korisnika Oglasnik grupacija vam nudi oglašavanje na Oglasnikovim web stranicama FindAPlace.com, kao i u Oglasnik tiskanom mediju koji izlazi 2 puta tjedno, utorkom i petkom.
+             Poslovni korisnik ima mogućnost postavljanja novih oglasa nekretnina, pregledavanja i pretraživanja objavljenih nekretnina te pregled i uređivanje vlastitih oglasa.
             </div>
             <div class="button_korisnik">
               <router-link style= "color: black; width: auto; text-decoration: none;" :to="'/register/poslovni-korisnik'">
@@ -49,6 +50,45 @@
     </div>
    
   </div>
+
+      <div class="site-footer" style="height: 300px; background-color:#666655">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h4 style="margin-top: 15px; padding: 0;">O nama</h4>
+            <p class="text-justify">
+              <span style="color:#a39053; font-weight: bold;">Find a Place</span> aplikacija omogućava pronalazak i oglašavanje nekretnina koje se mogu kupiti/prodati ili iznajmiti. 
+              <br><br> Cilj aplikacije jest omogućiti korisnicima da na brz i jednostavan način mogu pregledavati nekretnine različitih 
+              tipova i namjene ili oglasiti svoju nekretninu.
+            </p>
+          </div>
+
+          <div class="col-xs-6 col-md-3" style="padding:0">
+            <h4 style="margin-top: 15px; padding: 0;">Kategorije</h4>
+            <ul class="footer-links" style="margin-left: 30px;">
+              <li>Stan</li>
+              <li>Kuća</li>
+              <li>Garsonjera</li>
+              <li>Apartman</li>
+              <li>Vikendica</li>
+              <li>Ostalo</li>
+            </ul>
+          </div>
+
+          <div class="col-xs-6 col-md-3">
+            <h4 style="margin-top: 15px; padding: 0;">Podaci</h4>
+            <ul class="footer-links">
+              <li>findaplace@gmail.com</li>
+              <li>15 Gajeva Street, 10000 Zagreb, Croatia</li>
+              <li>+385 1 4815 111</li>
+              <li>+385 98 367 582</li>
+            </ul>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+</div>
 </template>
 
 <script>  
@@ -61,7 +101,9 @@ export default {
     };
   },
   created() {
-    
+     if(user.isLogged == true){
+      this.$router.push({name: 'Home'})
+    }
   },
   methods: {
     
@@ -254,3 +296,65 @@ button:hover{
  
 </style>
 
+
+<style scoped>
+.site-footer
+{
+  padding:0;
+  font-size:16px;
+  line-height:25px;
+  color:#ffffff; 
+}
+.site-footer hr
+{
+  border-top-color:#bbb;
+  opacity:0.5
+}
+.site-footer hr.small
+{
+  margin:25px 0
+}
+.site-footer h6
+{
+  color:#fff;
+  font-size:16px;
+  text-transform:uppercase;
+  margin-top:5px;
+  letter-spacing:2px
+}
+.site-footer a
+{
+  color:#737373;
+}
+.site-footer a:hover
+{
+  color:#3366cc;
+  text-decoration:none;
+}
+.footer-links
+{
+  padding-left:0;
+  list-style:none
+}
+
+
+@media (max-width:991px)
+{
+  .site-footer [class^=col-]
+  {
+    margin-bottom:30px
+  }
+}
+@media (max-width:767px)
+{
+  .site-footer
+  {
+    padding-bottom:0
+  }
+  .site-footer .copyright-text,.site-footer .social-icons
+  {
+    text-align:center
+  }
+}
+
+</style>

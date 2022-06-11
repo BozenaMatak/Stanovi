@@ -22,6 +22,7 @@
         "node-sass": "^7.0.1",
         "vform": "^2.1.2",
         "vue": "^3.2.31",
+        "vue-moment": "^4.1.0",
         "vue-router": "^4.0.14",
         "vue-sweetalert2": "^5.0.5",
         "vuex": "^4.0.2"

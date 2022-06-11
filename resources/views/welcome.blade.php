@@ -9,18 +9,41 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <title>Iznajmljivanje stanova</title>
-        <style>
-            body{
-                margin: 0;
-                padding: 0;
-                background-color:rgb(246, 246, 246);
+        <style> 
+            /* width */
+            ::-webkit-scrollbar {
+            width:10px;
+            }
 
+            /* Track */
+            ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+            background: #888; 
+            }
 
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
             }
         </style>
         <script>
             
-            // localStorage.removeItem('currentUser');
+            if(localStorage.length != 0){
+                if(localStorage.currentUser){
+                    console.log('...')
+                }
+                else{
+                    localStorage.clear();
+                }
+                
+                
+
+ 
+            }
             console.log(localStorage)
             if(localStorage.length == 0){
                 let user_1 = {
@@ -35,15 +58,8 @@
             
             var user = JSON.parse(localStorage.getItem('currentUser'));
             
-            // if(localstorage)
 
-            // let user_1 = {
-            //     isLogged: false
-            // }
-            // localStorage.removeItem('currentUser');
-
-            // localStorage.setItem("currentUser",JSON.stringify(user_1));
-
+            
 
 
             
@@ -54,8 +70,7 @@
 
         <div id="app">
 
-            <navbar></navbar>
-            <footer></footer>
+            <navbar></navbar> 
             <router-view/>
 
 

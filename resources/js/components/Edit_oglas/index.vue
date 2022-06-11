@@ -1,5 +1,5 @@
 <template>
-<div style="position: relative "> 
+<div style="position: relative;">
   <div class="container" style="margin-bottom: 70px;">
     <div class="shadow">
       <div class="col-12">
@@ -74,7 +74,7 @@
         
             <div class="email_username row section">
               <div class="col-6"> 
-                <label for="Povrsina">Površina (m² )*</label>
+                <label for="Povrsina">Površina (m²) *</label>
                 <div class="icons">
                   <input class="bez_ikone" v-model="data.povrsina" type="text" id="Povrsina" name="Povrsina" required>
                 </div> 
@@ -119,15 +119,9 @@
                 </div>               
               </div>
 
-              <div class="col-6">
-                <label for="Zupanija">Fotografije</label>
-                <div class="button_fotografije" style="width:70%;">
-                  <input type="file" @change="onChange" style="border-bottom: 0;padding: 0; padding-bottom: 40px;">
-                </div>
-              </div>
  
               <div class="col-6" style="margin-bottom: 20px"> 
-                <label for="Grad" style="margin-top:12px">Cijena (€) *</label> 
+                <label for="Grad" style="margin-top:12px">Cijena (€)*</label>
                 <div class="icons">
                   <input v-model="data.cijena" class="bez_ikone" type="text" id="Cijena" name="Cijena" required>
                 </div>    
@@ -552,7 +546,7 @@
             <div class="forma">
               <div class="row" style="margin-bottom: 20px">                    
                 <div class="col-6"> 
-                  <label for="Kontakt">Kontakt broj *</label>
+                  <label for="Kontakt">Kontakt broj</label>
                   <div class="icons">
                     <input class="bez_ikone" v-model="data.kontakt" type="text" id="Kontakt" name="Kontakt">
                   </div> 
@@ -567,12 +561,14 @@
 
             <hr style="width:78%; margin:30px auto; ">
             <div class="button_korisnik">
-              <button @click.prevent="addOglas" type="submit">Predaj oglas</button>
+              <button @click.prevent="editOglas" type="submit">Izmjeni oglas</button>
             </div>           
       </div>        
     </div> 
   </div>   
 </div>
+
+
   <div class="site-footer" style="height: 300px; background-color:#666655">
       <div class="container">
         <div class="row">
@@ -610,19 +606,24 @@
         <hr>
       </div>
     </div>
-</div>
+
+
+    </div>
 </template>
 
 <script>  
 
 import axios from 'axios';
 import {  PROZORI, VRATA, PODOVI,STANJE,GODINE,ZUPANIJE, TIP_PROSTORA, SOBNOST, NAMIJENA, GRADOVI } from '../../constants'; 
+import { getOglas } from '../../api/index';
 import Swal from 'sweetalert2';
-
 export default {
-  name: 'predaj-oglas',
+  name: 'edit-oglas',
   data() {
     return {
+        oglasi: [],
+        oglas:{},
+        id: null,
         name: '',
         podovi:[],
         pod:'',
@@ -643,7 +644,6 @@ export default {
         namijena:[],
         namijene: '',
         zupanija: '',   //zupanija predstavlja jednu zupaniju koju je korisnik odabrao prilikom registracije
-        image: null,
         data: {
           tip: '',
           namjena: '',
@@ -651,7 +651,6 @@ export default {
           povrsina: '',
           soba: '',
           opis: '',
-          image: '',
           cijena: '',
           zupanija: '',
           grad:'',
@@ -708,8 +707,7 @@ export default {
           vlak: false,
           vrtic: false,
           kontakt: '',
-          user_id: null,
-          image: null,
+          user_id: null
         },
         errors : {
           tip: false,
@@ -730,8 +728,8 @@ export default {
         }
     };
   },
-  created() {  
-     if(user.isLogged == false){
+  async created() {  
+    if(user.isLogged == false){
       this.$router.push({name: 'Home'})
     }
     
@@ -771,11 +769,157 @@ export default {
 
     this.data.user_id = user.id
 
+    this.oglasi = await getOglas();  
+
+
+
+    this.id = this.$route.params.id
+
+    this.oglasi.forEach(element => {
+        if(this.id == element.id){
+            this.oglas = element
+        }
+    });
+          
+          this.data.tip = this.oglas.tip
+          this.data.namjena = this.oglas.namjena
+          this.data.naslov = this.oglas.naslov
+          this.data.povrsina = this.oglas.povrsina
+          this.data.soba = this.oglas.soba
+          this.data.opis = this.oglas.opis
+          this.data.cijena = this.oglas.cijena
+          this.data.zupanija = this.oglas.zupanija
+          this.data.grad = this.oglas.grad
+          this.data.adresa = this.oglas.adresa
+          this.data.broj_kupaona = this.oglas.broj_kupaona
+          this.data.san_cvor = this.oglas.san_cvor
+          this.data.balkon = this.oglas.balkon
+          this.data.terasa = this.oglas.terasa
+          this.data.etaza = this.oglas.etaza
+          this.data.grijanje = this.oglas.grijanje
+          this.data.godina_iz = this.oglas.godina_iz
+          this.data.kat = this.oglas.kat
+          this.data.en_cer = this.oglas.en_car
+          this.data.tip_gradnja = this.oglas.tip_gradnja
+          this.data.stanja = this.oglas.stanja
+          this.data.prozor = this.oglas.prozor
+          this.data.vanjska_vrata = this.oglas.vanjska_vrata
+          this.data.pod = this.oglas.pod
+          this.data.broj_park_mjes = this.oglas.broj_park_mjes
+          if(this.oglas.podzemna_garaza == 1){
+            this.data.podzemna_garaza = true
+          }
+          if(this.oglas.parkirno_mjesto == 1){
+            this.data.parkirno_mjesto = true
+          }  
+          if(this.oglas.samostojeca_garaza == 1){
+            this.data.samostojeca_garaza = true
+          } 
+          if(this.oglas.javni_parking == 1){
+            this.data.javni_parking = true
+          } 
+          if(this.oglas.gradevinska_dozvola == 1){
+            this.data.gradevinska_dozvola = true
+          } 
+          if(this.oglas.vlasnicki_list == 1){
+            this.data.vlasnicki_list = true
+          } 
+          if(this.oglas.uporabna_dozvola == 1){
+            this.data.uporabna_dozvola = true
+          } 
+          if(this.oglas.lift == 1){
+            this.data.lift = true
+          } 
+          if(this.oglas.klima == 1){
+            this.data.klima = true
+          } 
+          if(this.oglas.pristup_inv == 1){
+            this.data.pristup_inv = true
+          } 
+          if(this.oglas.fiksni_tel == 1){
+            this.data.fiksni_tel = true
+          }   
+          if(this.oglas.isdn == 1){
+            this.data.isdn = true
+          }  
+          if(this.oglas.adsl == 1){
+            this.data.adsl = true
+          }  
+          if(this.oglas.wifi == 1){
+            this.data.wifi = true
+          }  
+          if(this.oglas.kablovski == 1){
+            this.data.kablovski = true
+          }  
+          if(this.oglas.opticki == 1){
+            this.data.opticki = true
+          }  
+          if(this.oglas.tv_antena == 1){
+            this.data.tv_antena = true
+          }  
+          if(this.oglas.satelitski_prikljucak == 1){
+            this.data.satelitski_prikljucak = true
+          }  
+          if(this.oglas.video_nadzor == 1){
+            this.data.video_nadzor = true
+          }  
+          if(this.oglas.alarm == 1){
+            this.data.alarm = true
+          }   
+          if(this.oglas.niskoenergetska == 1){
+            this.data.niskoenergetska = true
+          }   
+          if(this.oglas.rostilj == 1){
+            this.data.rostilj = true
+          }   
+          if(this.oglas.bazen == 1){
+            this.data.bazen = true
+          }   
+          if(this.oglas.autobus == 1){
+            this.data.autobus = true
+          }   
+          if(this.oglas.bolnica == 1){
+            this.data.bolnica = true
+          }   
+          if(this.oglas.dom_zdravlja == 1){
+            this.data.dom_zdravlja = true
+          }   
+          if(this.oglas.fakultet == 1){
+            this.data.fakultet = true
+          }   
+          if(this.oglas.jez_mor_rij == 1){
+            this.data.jez_mor_rij = true
+          }   
+          if(this.oglas.osnovna_skola == 1){
+            this.data.osnovna_skola = true
+          }   
+          if(this.oglas.park_suma == 1){
+            this.data.park_suma = true
+          }   
+          if(this.oglas.sportski_objekt == 1){
+            this.data.sportski_objekt = true
+          }   
+          if(this.oglas.srednja_skola == 1){
+            this.data.srednja_skola = true
+          }     
+          if(this.oglas.tramvaj == 1){
+            this.data.tramvaj = true
+          }   
+          if(this.oglas.trgovacki_centar == 1){
+            this.data.trgovacki_centar = true
+          }   
+          if(this.oglas.vlak == 1){
+            this.data.vlak = true
+          }   
+          if(this.oglas.vrtic == 1){
+            this.data.vrtic = true
+          }     
+          this.data.kontakt = this.oglas.kontakt
+          this.data.user_id = this.oglas.user_id 
     
   },
   methods: {
-    addOglas(){ 
-
+    editOglas(){ 
       this.errors.tip = false
       this.errors.namjena = false
       this.errors.naslov= false
@@ -837,34 +981,35 @@ export default {
       if(!this.data.kontakt){
         this.errors.kontakt = true
       }
-      this.data.image = this.image.name
-      console.log(this.data)
-      axios.post('/api/predaj-oglas', this.data)
-      .then(() =>{
-        this.onUpload()
-        Swal.fire('Uspješno objavljen!', 'Uspješno ste objavili oglas.', 'success')
-          .then(res  =>{
-            this.$router.go()
-        })
-      })
-      .catch((e) =>{
-        console.log(e.response.data.message)
-      })
-    },
-    onChange(e){
-      console.log("Selected file", e.target.files[0])
-      this.image = e.target.files[0]; 
+ 
+      Swal.fire({
+            title: 'Jeste li sigurni da želite izmjeniti oglas?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Da, izmjeni!'
+          })
+          .then(res=>{ 
+            if(res.isConfirmed == true){
+              axios.post(`/api/update-oglas/${this.id}`, this.data)
+              .then((res) =>{
+                Swal.fire('Promjenjeno!', 'Uspješno ste promjenili oglas.', 'success')
+                .then(res=>{
+                  this.$router.go()
+                })
+              })
+              .catch((e) =>{
+                Swal.fire('Pogreška!', 'Pojavila se pogreška pri izmjeni oglasa', 'warning');
+                console.log(e)
+              })
+            }
+          })
+          .catch(err=>{
+            console.log(err)
+          })
 
-    },
-    onUpload(){
-      let fd = new FormData();
-      fd.append('img', this.image);
-      axios.post('/api/onUpload', fd)
-      .then(res=>{ 
-        
-      }).catch(err=>console.log(err))
-
-    },
+    }
   }
 };
 </script>
@@ -984,6 +1129,7 @@ select{
   background: transparent;
 }
 </style>
+
 <style scoped>
 .site-footer
 {

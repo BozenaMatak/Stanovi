@@ -23,7 +23,7 @@ export const getUser = () => {
   return new Promise((resolve, reject) => {
     try {
       axios
-        .get(`/api/user`)
+        .get(`/api/get-user`)
         .then(res => {
           if (res && res.data) {
             resolve(res.data);
@@ -62,6 +62,25 @@ export const getOglas_korisnik = (id_korisnik) => {
     try {
       axios
         .get(`/api/dohvati-oglase-2/${id_korisnik}`)
+        .then(res => {
+          if (res && res.data) {
+            resolve(res.data); 
+          } 
+        })
+        .catch(err => { 
+          console.log(err)
+        });
+    } catch (err) { 
+      console.log(err)
+    }
+  });
+};
+
+export const getOglas_korisnika = (id_korisnika) => {
+  return new Promise((resolve, reject) => {
+    try {
+      axios
+        .get(`/api/dohvati-oglase-3/${id_korisnika}`)
         .then(res => {
           if (res && res.data) {
             resolve(res.data); 

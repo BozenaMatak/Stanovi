@@ -1,11 +1,22 @@
 <template>
-  <div class="container">
+<div style="position: relative ">  
+  <div class="container" style="margin-bottom: 70px;">
     <div class="shadow">
       <div class="col-12">
-        <div class="registracija">
-          <h2>
-            Registracija privatnog korisnika
-          </h2>
+        <div class="row">
+            <div class="col-6" style="margin:0; padding: 0;text-align: left; color: black;">
+              <h3>
+                Registracija privatnog korisnika
+              </h3>
+            </div>
+          <div class="col-6" style="margin:0; padding: 0;text-align: left; color: black;">
+            <div class="row">
+              <div class="col-6" style="width:40%">
+              <label for="profil" style="padding-top: 40px; padding-bottom: 5px; font-size: 19px">Odaberite profilnu sliku</label>
+                <input type="file" @change="onChange" style="border-bottom: 0;padding: 0; padding-bottom: 40px;">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="tekst">
           <p style="width: auto">Već imaš korisnički račun? </p>
@@ -142,6 +153,59 @@
     </div>
    
   </div>
+<div class="site-footer" style="height: 300px; background-color:#666655">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h4 style="margin-top: 15px; padding: 0;">O nama</h4>
+            <p class="text-justify">
+              <bold>Find a Place</bold> aplikacija omogućava pronalazak i oglašavanje nekretnina koje se mogu kupiti/prodati ili iznajmiti. 
+              <br><br> Cilj aplikacije jest omogućiti korisnicima da na brz i jednostavan način mogu pregledavati nekretnine različitih 
+              tipova i namjene ili oglasiti svoj oglas i tako ga postaviti da bude vidljiv svim korisnicima ove aplikacije.
+            </p>
+            <div class="row">
+              <div class="col-6">
+                <ul class="footer-links">
+                <li>findaplace@gmail.com</li>
+                <li>15 Gajeva Street, 10000 Zagreb, Croatia</li>
+              </ul>
+              </div>
+              <div class="col-6">
+                <ul class="footer-links">
+                <li>+385 1 4815 111</li>
+                <li>+385 98 367 582</li>
+              </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-6 col-md-3" style="padding:0">
+            <h4 style="margin-top: 15px; padding: 0;">Kategorije</h4>
+            <ul class="footer-links" style="margin-left: 30px;">
+              <li>Stan</li>
+              <li>Kuća</li>
+              <li>Garsonjera</li>
+              <li>Apartman</li>
+              <li>Vikendica</li>
+              <li>Ostalo</li>
+            </ul>
+          </div>
+
+          <div class="col-xs-6 col-md-3">
+            <h6>Quick Links</h6>
+            <ul class="footer-links">
+              <li><a href="http://scanfcode.com/about/">About Us</a></li>
+              <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
+              <li><a href="http://scanfcode.com/contribute-at-scanfcode/">Contribute</a></li>
+              <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
+              <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>  
@@ -176,13 +240,18 @@ export default {
           postanskibroj: null,
           adresa:'',
           type: 'Privatni',
-          broj_mob: null
-
+          broj_mob: null,
+          image: null
         },
+        image: null,
         errors : []
     };
   },
+
   created() {  
+     if(user.isLogged == true){
+      this.$router.push({name: 'Home'})
+    }
     COUNTRIES.forEach(element => {
       this.countries.push(element) 
     }); 
@@ -198,15 +267,33 @@ export default {
   },
   methods: {
     addUser(){
+      this.data.image = this.image.name
       axios.post('/api/register-private', this.data)
       .then(() =>{
-        Swal.fire('Registered!', 'Uspješno ste se registrirali u sustav.', 'success');
+        Swal.fire('Registrirani ste!', 'Uspješno ste se registrirali u sustav.', 'success');
+        this.onUpload()
         this.$router.push({name: 'login'}) 
       })
       .catch((e) =>{
         console.log(e.response.data.message)
       })
-    }
+    },
+    onChange(e){
+      console.log("Selected file", e.target.files[0])
+      this.image = e.target.files[0];
+      console.log(this.image)
+
+    },
+    onUpload(){
+      let fd = new FormData();
+      fd.append('img', this.image);
+      axios.post('/api/onUpload', fd)
+      .then(res=>{
+        console.log("Response", res.data)
+        
+      }).catch(err=>console.log(err))
+
+    },
   }
 };
 </script>
@@ -217,16 +304,12 @@ export default {
   margin-top: 50px;
   text-align: center;
 }
-.registracija{
-  width: 80%;
-  text-align: left;
-  margin: auto;
+
+ h3{
   color: black;
-}
-.registracija h2{
-  color: black;
-  padding: 30px 0;
+  padding: 40px 0;
   font-weight: bold;
+  margin-left: 50px;
 }
 
 .tekst{
@@ -313,3 +396,64 @@ select{
 }
 </style>
 
+<style scoped>
+.site-footer
+{
+  padding:0;
+  font-size:16px;
+  line-height:25px;
+  color:#ffffff; 
+}
+.site-footer hr
+{
+  border-top-color:#bbb;
+  opacity:0.5
+}
+.site-footer hr.small
+{
+  margin:25px 0
+}
+.site-footer h6
+{
+  color:#fff;
+  font-size:16px;
+  text-transform:uppercase;
+  margin-top:5px;
+  letter-spacing:2px
+}
+.site-footer a
+{
+  color:#737373;
+}
+.site-footer a:hover
+{
+  color:#3366cc;
+  text-decoration:none;
+}
+.footer-links
+{
+  padding-left:0;
+  list-style:none
+}
+
+
+@media (max-width:991px)
+{
+  .site-footer [class^=col-]
+  {
+    margin-bottom:30px
+  }
+}
+@media (max-width:767px)
+{
+  .site-footer
+  {
+    padding-bottom:0
+  }
+  .site-footer .copyright-text,.site-footer .social-icons
+  {
+    text-align:center
+  }
+}
+
+</style>

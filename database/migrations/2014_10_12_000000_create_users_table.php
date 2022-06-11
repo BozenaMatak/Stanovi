@@ -23,10 +23,11 @@ class CreateUsersTable extends Migration
             $table->string('drzava');
             $table->string('zupanija');
             $table->string('grad');
-            $table->string('postanskibroj');
+            $table->integer('postanskibroj');
             $table->string('adresa');
             $table->string('type');
             $table->string('broj_mob')->nullable();
+            $table->string('image');
             $table->timestamps();
         });
     }
